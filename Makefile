@@ -78,7 +78,6 @@ _deps-common:
 	@command -v starship >/dev/null 2>&1 || curl -sS https://starship.rs/install.sh | sh -s -- -y
 	@[ -d "$$HOME/.fzf" ] || (git clone --depth 1 https://github.com/junegunn/fzf.git "$$HOME/.fzf" && "$$HOME/.fzf/install" --all)
 	@[ -d "$$HOME/.tmux/plugins/tpm" ] || git clone https://github.com/tmux-plugins/tpm "$$HOME/.tmux/plugins/tpm"
-	@[ -d "$$HOME/git-repos/dracula-tmux" ] || (mkdir -p "$$HOME/git-repos" && git clone https://github.com/dracula/tmux "$$HOME/git-repos/dracula-tmux")
 
 zsh:
 	@echo "==> Deploying zsh config..."
