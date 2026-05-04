@@ -82,6 +82,12 @@ tmux-kill() {
 }
 
 
+docker_kill_fzf() {
+  local container
+  container=$(docker ps --format "{{.Names}}\t{{.Image}}\t{{.Status}}" | fzf --prompt="Kill container: " | awk '{print $1}')
+  [[ -n "$container" ]] && docker kill "$container"
+}
+
 tmux_start_music() {
   local session="music"
 
