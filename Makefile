@@ -22,8 +22,15 @@ install-deps:
 
 _deps-linux:
 	@echo "  [Linux] Checking system packages..."
-	@command -v tmux >/dev/null 2>&1 || (sudo apt-get update -qq && sudo apt-get install -y tmux)
-	@command -v batcat >/dev/null 2>&1 || (sudo apt-get update -qq && sudo apt-get install -y bat)
+	@missing=""; \
+	for pkg in git curl ca-certificates tmux bat fd-find ripgrep zsh zsh-syntax-highlighting fontconfig unzip jq shellcheck shfmt; do \
+		dpkg -s "$$pkg" >/dev/null 2>&1 || missing="$$missing $$pkg"; \
+	done; \
+	if [ -n "$$missing" ]; then \
+		sudo apt-get update -qq && sudo apt-get install -y $$missing; \
+	fi
+	@mkdir -p "$$HOME/.local/bin"
+	@command -v fd >/dev/null 2>&1 || { command -v fdfind >/dev/null 2>&1 && ln -sf "$$(command -v fdfind)" "$$HOME/.local/bin/fd"; }
 	@command -v zoxide >/dev/null 2>&1 || curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
 	@command -v eza >/dev/null 2>&1 || { \
 		ARCH=$$(uname -m); \
@@ -35,6 +42,7 @@ _deps-linux:
 	}
 	@command -v nvim >/dev/null 2>&1 || { \
 		ARCH=$$(uname -m); \
+		case "$$ARCH" in aarch64) ARCH=arm64 ;; esac; \
 		curl -LO "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-$${ARCH}.tar.gz" && \
 		sudo rm -rf /opt/nvim && \
 		sudo tar -C /opt -xzf "nvim-linux-$${ARCH}.tar.gz" && \
@@ -43,6 +51,16 @@ _deps-linux:
 		echo "  neovim installed"; \
 	}
 	@command -v rbenv >/dev/null 2>&1 || curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
+	@command -v lazygit >/dev/null 2>&1 || { \
+		VERSION=$$(curl -fsSL https://api.github.com/repos/jesseduffield/lazygit/releases/latest | sed -n 's/.*\"tag_name\": \"v\([^\"]*\)\".*/\1/p'); \
+		ARCH=$$(uname -m); \
+		case "$$ARCH" in x86_64) ARCH=x86_64 ;; aarch64) ARCH=arm64 ;; armv7l) ARCH=armv7 ;; esac; \
+		curl -sSL "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_$${VERSION}_Linux_$${ARCH}.tar.gz" -o /tmp/lazygit.tar.gz && \
+		tar -xf /tmp/lazygit.tar.gz -C /tmp lazygit && \
+		sudo mv /tmp/lazygit /usr/local/bin/lazygit && \
+		rm -f /tmp/lazygit.tar.gz && \
+		echo "  lazygit installed"; \
+	}
 	@fc-list | grep -qi "JetBrainsMono" || { \
 		echo "  Installing JetBrainsMono Nerd Font..."; \
 		mkdir -p "$$HOME/.local/share/fonts"; \
@@ -59,10 +77,14 @@ _deps-mac:
 	@command -v tmux >/dev/null 2>&1 || brew install tmux
 	@command -v eza >/dev/null 2>&1 || brew install eza
 	@command -v bat >/dev/null 2>&1 || brew install bat
+	@command -v fd >/dev/null 2>&1 || brew install fd
+	@command -v rg >/dev/null 2>&1 || brew install ripgrep
+	@command -v jq >/dev/null 2>&1 || brew install jq
 	@command -v zoxide >/dev/null 2>&1 || brew install zoxide
 	@command -v rbenv >/dev/null 2>&1 || brew install rbenv
 	@command -v nvim >/dev/null 2>&1 || brew install neovim
 	@command -v starship >/dev/null 2>&1 || brew install starship
+	@command -v lazygit >/dev/null 2>&1 || brew install lazygit
 	@ls "$$HOME/Library/Fonts/"*JetBrains* >/dev/null 2>&1 || { \
 		echo "  Installing JetBrainsMono Nerd Font..."; \
 		mkdir -p "$$HOME/Library/Fonts"; \

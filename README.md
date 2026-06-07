@@ -17,7 +17,7 @@ Personal dotfiles for Zsh, Neovim, and tmux — targeting macOS and Debian/Ubunt
 - `git`
 - `make`
 
-Everything else (Neovim, tmux, Oh My Zsh, Zinit, Starship, fzf, eza, bat, zoxide, rbenv, Nerd Fonts…) is installed automatically by the Makefile.
+Everything else (Neovim, tmux, Oh My Zsh, Zinit, Starship, fzf, fd, ripgrep, eza, bat, zoxide, rbenv, lazygit, jq, Nerd Fonts...) is installed automatically by the Makefile.
 
 ## Install
 
@@ -62,6 +62,7 @@ touch ~/.zsh_secrets
 
 - **Shell**: [Oh My Zsh](https://ohmyz.sh/) + [Zinit](https://github.com/zdharma-continuum/zinit) + [Starship](https://starship.rs/)
 - **Fuzzy finding**: [fzf](https://github.com/junegunn/fzf) + [fzf-tab](https://github.com/Aloxaf/fzf-tab)
+- **File search**: [fd](https://github.com/sharkdp/fd) + [ripgrep](https://github.com/BurntSushi/ripgrep)
 - **Navigation**: [zoxide](https://github.com/ajeetdsouza/zoxide)
 - **File listing**: [eza](https://github.com/eza-community/eza)
 - **Paging/cat**: [bat](https://github.com/sharkdp/bat)
