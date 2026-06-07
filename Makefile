@@ -23,7 +23,7 @@ install-deps:
 _deps-linux:
 	@echo "  [Linux] Checking system packages..."
 	@missing=""; \
-	for pkg in git curl ca-certificates tmux bat fd-find ripgrep zsh zsh-syntax-highlighting fontconfig unzip jq shellcheck shfmt; do \
+	for pkg in git curl ca-certificates tmux bat fd-find ripgrep zsh zsh-syntax-highlighting fontconfig unzip jq shellcheck shfmt chafa; do \
 		dpkg -s "$$pkg" >/dev/null 2>&1 || missing="$$missing $$pkg"; \
 	done; \
 	if [ -n "$$missing" ]; then \
@@ -77,6 +77,7 @@ _deps-mac:
 	@command -v tmux >/dev/null 2>&1 || brew install tmux
 	@command -v eza >/dev/null 2>&1 || brew install eza
 	@command -v bat >/dev/null 2>&1 || brew install bat
+	@command -v chafa >/dev/null 2>&1 || brew install chafa
 	@command -v fd >/dev/null 2>&1 || brew install fd
 	@command -v rg >/dev/null 2>&1 || brew install ripgrep
 	@command -v jq >/dev/null 2>&1 || brew install jq

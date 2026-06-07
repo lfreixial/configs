@@ -66,6 +66,7 @@ touch ~/.zsh_secrets
 - **Navigation**: [zoxide](https://github.com/ajeetdsouza/zoxide)
 - **File listing**: [eza](https://github.com/eza-community/eza)
 - **Paging/cat**: [bat](https://github.com/sharkdp/bat)
+- **Terminal image previews**: [chafa](https://hpjansson.org/chafa/)
 - **Git TUI**: [lazygit](https://github.com/jesseduffield/lazygit)
 - **Tmux theme**: [Dracula](https://draculatheme.com/tmux)
 - **Neovim distro**: [LazyVim](https://www.lazyvim.org/)

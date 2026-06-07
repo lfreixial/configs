@@ -10,6 +10,7 @@ Zsh config built on Oh My Zsh and Zinit, with Starship prompt, fzf-tab completio
 | [Zinit](https://github.com/zdharma-continuum/zinit) | Fast plugin loader |
 | [Starship](https://starship.rs/) | Cross-shell prompt |
 | [fzf](https://github.com/junegunn/fzf) | Fuzzy finder |
+| [chafa](https://hpjansson.org/chafa/) | Terminal image previews in `fzf` |
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | Smarter `cd` with frecency |
 | [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) | Fish-style command suggestions |
 | [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) | Live syntax highlighting |
@@ -49,7 +50,7 @@ Zsh config built on Oh My Zsh and Zinit, with Starship prompt, fzf-tab completio
 |-------|---------|
 | `c` | `clear` |
 | `ls` | `eza` with icons, git status, and colours |
-| `f` | fzf file picker → open in Neovim |
+| `f` | fzf file picker with `bat` text previews and `chafa` image previews → open in Neovim |
 | `cat` | `bat` / `batcat` (OS-dependent) |
 
 ### Git
