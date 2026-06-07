@@ -32,6 +32,74 @@ fzf-cd-widget() {
     zle reset-prompt
 }
 
+unalias f 2>/dev/null
+function f {
+  local selected
+
+  selected=$(
+    find . -type f 2>/dev/null |
+      fzf --preview '
+        file={}
+        lower=$(printf "%s" "$file" | tr "[:upper:]" "[:lower:]")
+
+        mime=$(file --brief --mime-type "$file" 2>/dev/null)
+
+        case "$mime:$lower" in
+          image/*:*)
+            if command -v chafa >/dev/null 2>&1; then
+              if [ -n "$KITTY_WINDOW_ID" ] && command -v kitten >/dev/null 2>&1; then
+                if [ -n "$TMUX" ]; then
+                  kitten icat --clear --transfer-mode=stream --stdin=no --passthrough=tmux --place="${FZF_PREVIEW_COLUMNS:-80}x${FZF_PREVIEW_LINES:-40}@0x0" --scale-up --align=left --loop=0 "$file"
+                else
+                  kitten icat --clear --transfer-mode=stream --stdin=no --passthrough=none --place="${FZF_PREVIEW_COLUMNS:-80}x${FZF_PREVIEW_LINES:-40}@0x0" --scale-up --align=left --loop=0 "$file"
+                fi
+              else
+                chafa --format=symbols --symbols=braille --colors=256 --fg-only --animate=off --scale=max --size="${FZF_PREVIEW_COLUMNS:-80}x${FZF_PREVIEW_LINES:-40}" "$file"
+              fi
+            else
+              printf "Image preview requires chafa: %s\n" "$file"
+            fi
+            ;;
+          text/*:*|application/json:*|application/xml:*|application/javascript:*|application/x-shellscript:*|application/x-yaml:*|*:.env|*:*.md|*:*.toml|*:*.yaml|*:*.yml)
+            if command -v bat >/dev/null 2>&1; then
+              bat --style=numbers --color=always "$file"
+            elif command -v batcat >/dev/null 2>&1; then
+              batcat --style=numbers --color=always "$file"
+            else
+              sed -n "1,200p" "$file"
+            fi
+            ;;
+          *)
+            file --brief "$file" 2>/dev/null || printf "Binary file: %s\n" "$file"
+            ;;
+        esac
+      '
+  )
+
+  if [ -n "$selected" ]; then
+    local mime
+    mime=$(file --brief --mime-type "$selected" 2>/dev/null)
+
+    if [[ "$mime" == image/* ]]; then
+      if [ -n "$KITTY_WINDOW_ID" ] && command -v kitten >/dev/null 2>&1; then
+        if [ -n "$TMUX" ]; then
+          kitten icat --clear --transfer-mode=stream --stdin=no --passthrough=tmux --scale-up --align=left --loop=0 "$selected"
+        else
+          kitten icat --clear --transfer-mode=stream --stdin=no --passthrough=none --scale-up --align=left --loop=0 "$selected"
+        fi
+      elif command -v chafa >/dev/null 2>&1; then
+        chafa --format=symbols --symbols=braille --colors=256 --fg-only --animate=off --scale=max "$selected"
+      else
+        printf "Image display requires kitten or chafa: %s\n" "$selected"
+      fi
+    elif command -v nvim >/dev/null 2>&1; then
+      command nvim "$selected"
+    else
+      command vim "$selected"
+    fi
+  fi
+}
+
 select_and_open_pr() {
   local pr_info=$(gh pr list --state open --json number,title | jq -r '.[] | "\(.number) \(.title)"' | fzf -1)
 
