@@ -1,9 +1,7 @@
 # Oh My Zsh configuration
 export ZSH="$HOME/.oh-my-zsh"
 
-# No theme — starship (initialized at the bottom of this file) owns the
-# prompt and overrides whatever OMZ sets here, so computing an OMZ theme
-# would just be wasted work on every startup.
+# starship (below) owns the prompt, so no OMZ theme needed
 ZSH_THEME=""
 
 plugins=(
@@ -12,8 +10,6 @@ plugins=(
     ruby
     aws
     buf
-    # z omitted — zoxide (below) already does frecency-based cd and is
-    # aliased over the cd builtin, so both would be redundant.
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -118,19 +114,14 @@ if [ -f ~/.zsh_alias ]; then
     source ~/.zsh_alias
 fi
 
-# Load completions. compinit's security audit (compaudit) is the single
-# biggest cost in shell startup (~1.5s) if it runs every time, so only
-# do a full audit once a day; otherwise trust the cached dump (-C skips
-# the audit entirely). Then byte-compile the dump in the background so
-# the *next* startup loads it even faster.
+# Load completions. Skip compinit's security audit unless the dump is
+# missing/stale (>24h) — audit is the biggest single cost otherwise.
 setopt extendedglob
 autoload -Uz compinit
 _zcompdump="${ZDOTDIR:-$HOME}/.zcompdump"
 if [[ -n "$_zcompdump"(#qN.mh-24) ]]; then
-    # Dump exists and is less than a day old — trust it, skip the audit.
     compinit -C -d "$_zcompdump"
 else
-    # Missing or stale — regenerate with the full security audit.
     compinit -d "$_zcompdump"
 fi
 {

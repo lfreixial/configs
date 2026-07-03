@@ -1,30 +1,18 @@
-# zsh-completions adds to fpath and fzf-tab hooks completion widgets, so
-# both need to load synchronously, before compinit runs further down in
-# .zshrc — do not turbo-load these two.
+# zsh-completions and fzf-tab must load before compinit — not turbo-loaded
 zinit light zsh-users/zsh-completions
 zinit light Aloxaf/fzf-tab
 
-# Everything below is deferred with `wait lucid` turbo-loading: it loads
-# asynchronously after the first prompt is drawn instead of blocking
-# startup. `zinit cdreplay -q` at the end replays any completions these
-# register so they still work correctly despite loading late.
-
-# zsh-syntax-highlighting binds its own widgets at the end of its own
-# script on source, so no atload hook is needed here.
+# Everything below turbo-loads (wait lucid) after the first prompt
 zinit ice wait lucid
 zinit light zsh-users/zsh-syntax-highlighting
 
-# zsh-autosuggestions normally starts itself via a precmd hook, which
-# wouldn't fire before the first prompt if turbo-loaded — atload forces
-# it to start immediately instead of waiting for the next prompt cycle.
 zinit ice wait lucid atload'_zsh_autosuggest_start'
 zinit light zsh-users/zsh-autosuggestions
 
 zinit ice wait lucid
 zinit light MichaelAquilina/zsh-you-should-use
 
-# git is already loaded via the Oh My Zsh plugins=() array in .zshrc —
-# loading OMZP::git here too would just source it twice.
+# git already comes from the OMZ plugins=() array in .zshrc
 zinit ice wait lucid
 zinit snippet OMZP::sudo
 

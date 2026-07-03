@@ -1,7 +1,4 @@
-# NVM configuration — lazy-loaded. Sourcing nvm.sh costs several hundred
-# ms (it was ~25% of total shell startup time before this), so we only
-# pay it the first time nvm/node/npm/npx/corepack is actually invoked,
-# or when load-nvmrc finds a .nvmrc worth caring about.
+# NVM configuration — lazy-loaded, sourcing nvm.sh on first real use
 export NVM_DIR="$HOME/.nvm"
 if [ ! -s "$NVM_DIR/nvm.sh" ]; then
     echo "Installing nvm..."
@@ -10,17 +7,14 @@ fi
 
 _nvm_load() {
     unset -f nvm node npm npx corepack _nvm_load 2>/dev/null
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 }
 for _nvm_cmd in nvm node npm npx corepack; do
     eval "$_nvm_cmd() { _nvm_load; $_nvm_cmd \"\$@\"; }"
 done
 unset _nvm_cmd
 
-# Cheap upward scan for a .nvmrc, with no nvm functions required — lets
-# load-nvmrc no-op instantly in the (common) case where neither the new
-# nor previous directory has one, instead of always paying to source nvm.
 _find_up_nvmrc() {
     local dir=$PWD
     while true; do
