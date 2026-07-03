@@ -32,13 +32,109 @@ fzf-cd-widget() {
     zle reset-prompt
 }
 
+# fzf preview helpers (fzf-tab completion preview + the f picker below).
+#
+# Authored here as zsh functions so they usable directly too, but fzf
+# runs --preview commands in a fresh non-interactive shell that won't
+# inherit them — re-sourcing this whole file there would cost ~2s
+# (mostly the NVM setup above). So on every shell startup we also
+# materialize them as small standalone scripts under
+# $ZSH_FZF_PREVIEW_CACHE, and that's what the preview commands actually
+# call. Both the interactive function and the cached script share the
+# exact same body text — defined once, used both ways.
+
+_ZSH_FZF_PREVIEW_SRC=$(cat <<'BODY'
+  target=$1
+
+  if [ -d "$target" ]; then
+    if command -v eza >/dev/null 2>&1; then
+      eza --color=always --icons=always --group-directories-first "$target"
+    else
+      ls --color "$target"
+    fi
+    return
+  fi
+
+  lower=$(printf '%s' "$target" | tr '[:upper:]' '[:lower:]')
+  mime=$(file --brief --mime-type "$target" 2>/dev/null)
+
+  case "$mime:$lower" in
+    image/*:*)
+      "$ZSH_IMAGE_PREVIEW" "$target" --fit-preview
+      ;;
+    text/*:*|application/json:*|application/xml:*|application/javascript:*|application/x-shellscript:*|application/x-yaml:*|*:.env|*:*.md|*:*.toml|*:*.yaml|*:*.yml)
+      if command -v bat >/dev/null 2>&1; then
+        bat --style=numbers --color=always "$target"
+      elif command -v batcat >/dev/null 2>&1; then
+        batcat --style=numbers --color=always "$target"
+      elif [ -f "$target" ]; then
+        sed -n '1,200p' "$target"
+      fi
+      ;;
+    *)
+      file --brief "$target" 2>/dev/null || printf 'Binary file: %s\n' "$target"
+      ;;
+  esac
+BODY
+)
+
+_ZSH_IMAGE_PREVIEW_SRC=$(cat <<'BODY'
+  target=$1
+  mode=$2
+
+  if ! command -v chafa >/dev/null 2>&1; then
+    printf 'Image preview requires chafa: %s\n' "$target"
+    return 0
+  fi
+
+  passthrough=none
+  [ -n "$TMUX" ] && passthrough=tmux
+
+  if [ "$mode" = "--fit-preview" ]; then
+    chafa --animate=off --passthrough="$passthrough" \
+      --size="${FZF_PREVIEW_COLUMNS:-80}x${FZF_PREVIEW_LINES:-40}" "$target"
+  else
+    chafa --animate=off --passthrough="$passthrough" --scale=max "$target"
+  fi
+BODY
+)
+
+eval "zsh_fzf_preview() {
+$_ZSH_FZF_PREVIEW_SRC
+}"
+eval "zsh_image_preview() {
+$_ZSH_IMAGE_PREVIEW_SRC
+}"
+
+export ZSH_FZF_PREVIEW_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh-fzf-preview"
+export ZSH_FZF_PREVIEW="$ZSH_FZF_PREVIEW_CACHE/zsh_fzf_preview"
+export ZSH_IMAGE_PREVIEW="$ZSH_FZF_PREVIEW_CACHE/zsh_image_preview"
+
+mkdir -p "$ZSH_FZF_PREVIEW_CACHE"
+{
+  echo '#!/usr/bin/env sh'
+  echo 'zsh_fzf_preview() {'
+  printf '%s\n' "$_ZSH_FZF_PREVIEW_SRC"
+  echo '}'
+  echo 'zsh_fzf_preview "$@"'
+} > "$ZSH_FZF_PREVIEW"
+{
+  echo '#!/usr/bin/env sh'
+  echo 'zsh_image_preview() {'
+  printf '%s\n' "$_ZSH_IMAGE_PREVIEW_SRC"
+  echo '}'
+  echo 'zsh_image_preview "$@"'
+} > "$ZSH_IMAGE_PREVIEW"
+chmod +x "$ZSH_FZF_PREVIEW" "$ZSH_IMAGE_PREVIEW"
+unset _ZSH_FZF_PREVIEW_SRC _ZSH_IMAGE_PREVIEW_SRC
+
 unalias f 2>/dev/null
 function f {
   local selected
 
   selected=$(
     find . -type f 2>/dev/null |
-      fzf --preview '"$HOME/.zsh_fzf_preview" {}'
+      fzf --preview '"$ZSH_FZF_PREVIEW" {}'
   )
 
   if [ -n "$selected" ]; then
@@ -46,7 +142,7 @@ function f {
     mime=$(file --brief --mime-type "$selected" 2>/dev/null)
 
     if [[ "$mime" == image/* ]]; then
-      "$HOME/.zsh_image_preview" "$selected"
+      "$ZSH_IMAGE_PREVIEW" "$selected"
     elif command -v nvim >/dev/null 2>&1; then
       command nvim "$selected"
     else

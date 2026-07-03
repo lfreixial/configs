@@ -33,8 +33,6 @@ Zsh config built on Oh My Zsh and Zinit, with Starship prompt, fzf-tab completio
 | `.zsh_keybinds` | Key bindings |
 | `.zsh_mac` | macOS-specific config |
 | `.zsh_debian` | Debian/Ubuntu-specific config |
-| `.zsh_fzf_preview` | Shared fzf preview renderer (dir/image/text/binary) — used by fzf-tab and `f` |
-| `.zsh_image_preview` | Shared chafa image renderer — used by `.zsh_fzf_preview` and `f` |
 | `~/.zsh_secrets` | Secrets (not tracked — create locally) |
 
 ## Aliases
@@ -119,6 +117,10 @@ Zsh config built on Oh My Zsh and Zinit, with Starship prompt, fzf-tab completio
 | `tmux-kill` | fzf session list → kill session (`tk`) |
 | `docker_kill_fzf` | fzf running container list → kill (`dk`) |
 | `tmux_start_music` | Launch `spotify_player` in a dedicated tmux session |
+| `zsh_fzf_preview` | Renders an fzf preview pane: `eza` for dirs, `bat` for text, `chafa` for images, `file` otherwise. Used by the fzf-tab completion preview and `f` |
+| `zsh_image_preview` | Renders an image via `chafa`, which auto-negotiates the kitty/iterm/sixel graphics protocol for the connected terminal (Ghostty, Kitty, WezTerm, iTerm2, ...), falling back to ANSI art |
+
+`zsh_fzf_preview` and `zsh_image_preview` are also written out as small standalone scripts under `$ZSH_FZF_PREVIEW_CACHE` on every shell startup, since fzf runs `--preview` commands in a fresh non-interactive shell that wouldn't otherwise see them. The `f` picker and the fzf-tab preview call the cached scripts (`$ZSH_FZF_PREVIEW`, `$ZSH_IMAGE_PREVIEW`) rather than the functions directly.
 
 ## Keybindings
 
