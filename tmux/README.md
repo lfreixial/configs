@@ -10,6 +10,8 @@ tmux config with Dracula theme, vi copy mode, and TPM plugin management.
 | [tmux-plugins/tmux-sensible](https://github.com/tmux-plugins/tmux-sensible) | Sane defaults |
 | [christoomey/vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator) | Seamless pane navigation with Neovim |
 | [tmux-plugins/tmux-yank](https://github.com/tmux-plugins/tmux-yank) | Copy to system clipboard |
+| [tmux-plugins/tmux-open](https://github.com/tmux-plugins/tmux-open) | Open a highlighted file/URL from copy mode (`o` opens with the OS default, `Ctrl-o` opens with `$EDITOR`) |
+| [fcsonline/tmux-thumbs](https://github.com/fcsonline/tmux-thumbs) | Vimium-style keyboard hints (`Prefix + Space`) to copy paths, URLs, and hashes visible on screen |
 | [tmux-plugins/tmux-resurrect](https://github.com/tmux-plugins/tmux-resurrect) | Save and restore sessions |
 | [tmux-plugins/tmux-continuum](https://github.com/tmux-plugins/tmux-continuum) | Auto-save sessions and start tmux on boot |
 | [dracula/tmux](https://github.com/dracula/tmux) | Dracula status bar theme |

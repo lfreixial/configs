@@ -1,7 +1,8 @@
 # Oh My Zsh configuration
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME="robbyrussell"
+# starship (below) owns the prompt, so no OMZ theme needed
+ZSH_THEME=""
 
 plugins=(
     git
@@ -9,7 +10,6 @@ plugins=(
     ruby
     aws
     buf
-    z
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -73,8 +73,22 @@ if [ -f ~/.zsh_alias ]; then
     source ~/.zsh_alias
 fi
 
-# Load completions
-autoload -Uz compinit && compinit
+# Load completions. Skip compinit's security audit unless the dump is
+# missing/stale (>24h) — audit is the biggest single cost otherwise.
+setopt extendedglob
+autoload -Uz compinit
+_zcompdump="${ZDOTDIR:-$HOME}/.zcompdump"
+if [[ -n "$_zcompdump"(#qN.mh-24) ]]; then
+    compinit -C -d "$_zcompdump"
+else
+    compinit -d "$_zcompdump"
+fi
+{
+    if [[ -s "$_zcompdump" && ( ! -s "$_zcompdump.zwc" || "$_zcompdump" -nt "$_zcompdump.zwc" ) ]]; then
+        zcompile "$_zcompdump"
+    fi
+} &!
+unset _zcompdump
 
 # Place this after nvm initialization!
 autoload -U add-zsh-hook

@@ -1,16 +1,34 @@
-# Add Zsh plugins
-zinit light zsh-users/zsh-syntax-highlighting
+# zsh-completions and fzf-tab must load before compinit — not turbo-loaded
 zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 
-# Add snippets
-zinit snippet OMZP::git
+# Everything below turbo-loads (wait lucid) after the first prompt
+zinit ice wait lucid
+zinit light zsh-users/zsh-syntax-highlighting
+
+zinit ice wait lucid atload'_zsh_autosuggest_start'
+zinit light zsh-users/zsh-autosuggestions
+
+zinit ice wait lucid
+zinit light MichaelAquilina/zsh-you-should-use
+
+# git already comes from the OMZ plugins=() array in .zshrc
+zinit ice wait lucid
 zinit snippet OMZP::sudo
-zinit snippet OMZP::archlinux
+
+zinit ice wait lucid
 zinit snippet OMZP::aws
+
+zinit ice wait lucid
 zinit snippet OMZP::kubectl
+
+zinit ice wait lucid
 zinit snippet OMZP::kubectx
+
+zinit ice wait lucid
 zinit snippet OMZP::command-not-found
+
+zinit ice wait lucid
+zinit snippet OMZP::direnv
 
 zinit cdreplay -q
