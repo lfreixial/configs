@@ -23,7 +23,7 @@ install-deps:
 _deps-linux:
 	@echo "  [Linux] Checking system packages..."
 	@missing=""; \
-	for pkg in git curl ca-certificates tmux bat fd-find ripgrep zsh zsh-syntax-highlighting fontconfig unzip jq shellcheck shfmt chafa; do \
+	for pkg in git curl ca-certificates tmux bat fd-find ripgrep zsh zsh-syntax-highlighting fontconfig unzip jq shellcheck shfmt chafa file gh xclip; do \
 		dpkg -s "$$pkg" >/dev/null 2>&1 || missing="$$missing $$pkg"; \
 	done; \
 	if [ -n "$$missing" ]; then \
@@ -86,6 +86,7 @@ _deps-mac:
 	@command -v nvim >/dev/null 2>&1 || brew install neovim
 	@command -v starship >/dev/null 2>&1 || brew install starship
 	@command -v lazygit >/dev/null 2>&1 || brew install lazygit
+	@command -v gh >/dev/null 2>&1 || brew install gh
 	@ls "$$HOME/Library/Fonts/"*JetBrains* >/dev/null 2>&1 || { \
 		echo "  Installing JetBrainsMono Nerd Font..."; \
 		mkdir -p "$$HOME/Library/Fonts"; \
