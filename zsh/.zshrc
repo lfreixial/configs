@@ -65,48 +65,7 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu select
 zstyle ':fzf-tab:complete:*:*' fzf-preview '
-  file=${realpath:-$word}
-  lower=$(printf "%s" "$file" | tr "[:upper:]" "[:lower:]")
-
-  if [ -d "$file" ]; then
-    if command -v eza >/dev/null 2>&1; then
-      eza --color=always --icons=always --group-directories-first "$file"
-    else
-      ls --color "$file"
-    fi
-  else
-    mime=$(file --brief --mime-type "$file" 2>/dev/null)
-
-    case "$mime:$lower" in
-      image/*:*)
-        if command -v chafa >/dev/null 2>&1; then
-          if [ -n "$KITTY_WINDOW_ID" ] && command -v kitten >/dev/null 2>&1; then
-                if [ -n "$TMUX" ]; then
-                  kitten icat --clear --transfer-mode=stream --stdin=no --passthrough=tmux --place="${FZF_PREVIEW_COLUMNS:-80}x${FZF_PREVIEW_LINES:-40}@0x0" --scale-up --align=left --loop=0 "$file"
-                else
-                  kitten icat --clear --transfer-mode=stream --stdin=no --passthrough=none --place="${FZF_PREVIEW_COLUMNS:-80}x${FZF_PREVIEW_LINES:-40}@0x0" --scale-up --align=left --loop=0 "$file"
-                fi
-              else
-                chafa --format=symbols --symbols=braille --colors=256 --fg-only --animate=off --scale=max --size="${FZF_PREVIEW_COLUMNS:-80}x${FZF_PREVIEW_LINES:-40}" "$file"
-              fi
-        else
-          printf "Image preview requires chafa: %s\n" "$file"
-        fi
-        ;;
-      text/*:*|application/json:*|application/xml:*|application/javascript:*|application/x-shellscript:*|application/x-yaml:*|*:.env|*:*.md|*:*.toml|*:*.yaml|*:*.yml)
-        if command -v bat >/dev/null 2>&1; then
-          bat --style=numbers --color=always "$file"
-        elif command -v batcat >/dev/null 2>&1; then
-          batcat --style=numbers --color=always "$file"
-        elif [ -f "$file" ]; then
-          sed -n "1,200p" "$file"
-        fi
-        ;;
-      *)
-        file --brief "$file" 2>/dev/null || printf "Binary file: %s\n" "$file"
-        ;;
-    esac
-  fi
+  "$ZSH_FZF_PREVIEW" "${realpath:-$word}"
 '
  
 # Aliases
