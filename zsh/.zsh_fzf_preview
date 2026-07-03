@@ -1,0 +1,39 @@
+#!/usr/bin/env sh
+# Shared fzf preview renderer: directories via eza, images via chafa
+# (see .zsh_image_preview), text via bat, everything else via `file`.
+# Used by both the fzf-tab completion preview (.zshrc) and the `f`
+# file picker (.zsh_functions) so the logic only lives in one place.
+#
+# Usage: .zsh_fzf_preview <path>
+
+target=$1
+
+if [ -d "$target" ]; then
+  if command -v eza >/dev/null 2>&1; then
+    eza --color=always --icons=always --group-directories-first "$target"
+  else
+    ls --color "$target"
+  fi
+  exit 0
+fi
+
+lower=$(printf '%s' "$target" | tr '[:upper:]' '[:lower:]')
+mime=$(file --brief --mime-type "$target" 2>/dev/null)
+
+case "$mime:$lower" in
+  image/*:*)
+    "$(dirname "$0")/.zsh_image_preview" "$target" --fit-preview
+    ;;
+  text/*:*|application/json:*|application/xml:*|application/javascript:*|application/x-shellscript:*|application/x-yaml:*|*:.env|*:*.md|*:*.toml|*:*.yaml|*:*.yml)
+    if command -v bat >/dev/null 2>&1; then
+      bat --style=numbers --color=always "$target"
+    elif command -v batcat >/dev/null 2>&1; then
+      batcat --style=numbers --color=always "$target"
+    elif [ -f "$target" ]; then
+      sed -n '1,200p' "$target"
+    fi
+    ;;
+  *)
+    file --brief "$target" 2>/dev/null || printf 'Binary file: %s\n' "$target"
+    ;;
+esac

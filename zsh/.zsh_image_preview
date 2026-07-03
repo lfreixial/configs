@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+# Renders an image via chafa, letting it auto-negotiate the best
+# protocol the connected terminal supports (kitty, iterm, sixels, or
+# ANSI symbols as a last resort). Works in Ghostty, Kitty, WezTerm,
+# iTerm2, and anything chafa can detect — no per-terminal special-casing.
+#
+# Usage: .zsh_image_preview <file> [--fit-preview]
+#   --fit-preview constrains output to the fzf preview pane size.
+
+target=$1
+mode=$2
+
+if ! command -v chafa >/dev/null 2>&1; then
+  printf 'Image preview requires chafa: %s\n' "$target"
+  exit 0
+fi
+
+passthrough=none
+[ -n "$TMUX" ] && passthrough=tmux
+
+if [ "$mode" = "--fit-preview" ]; then
+  chafa --animate=off --passthrough="$passthrough" \
+    --size="${FZF_PREVIEW_COLUMNS:-80}x${FZF_PREVIEW_LINES:-40}" "$target"
+else
+  chafa --animate=off --passthrough="$passthrough" --scale=max "$target"
+fi

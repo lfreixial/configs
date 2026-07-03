@@ -10,7 +10,7 @@ Zsh config built on Oh My Zsh and Zinit, with Starship prompt, fzf-tab completio
 | [Zinit](https://github.com/zdharma-continuum/zinit) | Fast plugin loader |
 | [Starship](https://starship.rs/) | Cross-shell prompt |
 | [fzf](https://github.com/junegunn/fzf) | Fuzzy finder |
-| [chafa](https://hpjansson.org/chafa/) | Terminal image previews in `fzf` |
+| [chafa](https://hpjansson.org/chafa/) | Terminal image previews in `fzf` — auto-negotiates kitty/iterm/sixel graphics protocols, so real images render in Ghostty, Kitty, WezTerm, iTerm2, etc., falling back to ANSI art elsewhere |
 | [gh](https://cli.github.com/) | GitHub CLI — powers the `gh*` aliases and PR-picker functions |
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | Smarter `cd` with frecency |
 | [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) | Fish-style command suggestions |
@@ -33,6 +33,8 @@ Zsh config built on Oh My Zsh and Zinit, with Starship prompt, fzf-tab completio
 | `.zsh_keybinds` | Key bindings |
 | `.zsh_mac` | macOS-specific config |
 | `.zsh_debian` | Debian/Ubuntu-specific config |
+| `.zsh_fzf_preview` | Shared fzf preview renderer (dir/image/text/binary) — used by fzf-tab and `f` |
+| `.zsh_image_preview` | Shared chafa image renderer — used by `.zsh_fzf_preview` and `f` |
 | `~/.zsh_secrets` | Secrets (not tracked — create locally) |
 
 ## Aliases
