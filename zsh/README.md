@@ -16,10 +16,12 @@ Zsh config built on Oh My Zsh and Zinit, with Starship prompt, fzf-tab completio
 | [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) | Fish-style command suggestions |
 | [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) | Live syntax highlighting |
 | [fzf-tab](https://github.com/Aloxaf/fzf-tab) | fzf-powered tab completion |
+| [zsh-you-should-use](https://github.com/MichaelAquilina/zsh-you-should-use) | Reminds you when you type something you already have an alias for |
+| [direnv](https://direnv.net/) (`OMZP::direnv`) | Auto-loads/unloads a directory's `.envrc` |
 
 ### Oh My Zsh plugins
 
-`git` · `rbenv` · `ruby` · `aws` · `buf` · `z`
+`git` · `rbenv` · `ruby` · `aws` · `buf`
 
 ## File structure
 

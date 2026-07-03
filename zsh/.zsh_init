@@ -1,16 +1,46 @@
-# Add Zsh plugins
-zinit light zsh-users/zsh-syntax-highlighting
+# zsh-completions adds to fpath and fzf-tab hooks completion widgets, so
+# both need to load synchronously, before compinit runs further down in
+# .zshrc — do not turbo-load these two.
 zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 
-# Add snippets
-zinit snippet OMZP::git
+# Everything below is deferred with `wait lucid` turbo-loading: it loads
+# asynchronously after the first prompt is drawn instead of blocking
+# startup. `zinit cdreplay -q` at the end replays any completions these
+# register so they still work correctly despite loading late.
+
+# zsh-syntax-highlighting binds its own widgets at the end of its own
+# script on source, so no atload hook is needed here.
+zinit ice wait lucid
+zinit light zsh-users/zsh-syntax-highlighting
+
+# zsh-autosuggestions normally starts itself via a precmd hook, which
+# wouldn't fire before the first prompt if turbo-loaded — atload forces
+# it to start immediately instead of waiting for the next prompt cycle.
+zinit ice wait lucid atload'_zsh_autosuggest_start'
+zinit light zsh-users/zsh-autosuggestions
+
+zinit ice wait lucid
+zinit light MichaelAquilina/zsh-you-should-use
+
+# git is already loaded via the Oh My Zsh plugins=() array in .zshrc —
+# loading OMZP::git here too would just source it twice.
+zinit ice wait lucid
 zinit snippet OMZP::sudo
-zinit snippet OMZP::archlinux
+
+zinit ice wait lucid
 zinit snippet OMZP::aws
+
+zinit ice wait lucid
 zinit snippet OMZP::kubectl
+
+zinit ice wait lucid
 zinit snippet OMZP::kubectx
+
+zinit ice wait lucid
 zinit snippet OMZP::command-not-found
+
+zinit ice wait lucid
+zinit snippet OMZP::direnv
 
 zinit cdreplay -q

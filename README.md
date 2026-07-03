@@ -17,7 +17,7 @@ Personal dotfiles for Zsh, Neovim, and tmux — targeting macOS and Debian/Ubunt
 - `git`
 - `make`
 
-Everything else (Neovim, tmux, Oh My Zsh, Zinit, Starship, fzf, fd, ripgrep, eza, bat, zoxide, rbenv, lazygit, gh, jq, chafa, xclip, Nerd Fonts...) is installed automatically by the Makefile.
+Everything else (Neovim, tmux, Oh My Zsh, Zinit, Starship, fzf, fd, ripgrep, eza, bat, zoxide, rbenv, lazygit, gh, jq, chafa, xclip, direnv, Nerd Fonts...) is installed automatically by the Makefile.
 
 `spotify_player` (used by `tmux_start_music`) is a manual install — it needs interactive OAuth setup, so it's intentionally left out of the automated dependency install.
 
@@ -72,5 +72,6 @@ touch ~/.zsh_secrets
 - **Git TUI**: [lazygit](https://github.com/jesseduffield/lazygit)
 - **GitHub CLI**: [gh](https://cli.github.com/) — used by the `gh*` aliases and PR-picker functions
 - **Clipboard (Linux)**: `xclip` — used by the `tmux-yank` plugin for system clipboard copy
+- **Per-directory env vars**: [direnv](https://direnv.net/) — auto-loads/unloads `.envrc` when you `cd` into a project
 - **Tmux theme**: [Dracula](https://draculatheme.com/tmux)
 - **Neovim distro**: [LazyVim](https://www.lazyvim.org/)
