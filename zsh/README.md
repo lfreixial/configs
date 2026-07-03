@@ -11,6 +11,7 @@ Zsh config built on Oh My Zsh and Zinit, with Starship prompt, fzf-tab completio
 | [Starship](https://starship.rs/) | Cross-shell prompt |
 | [fzf](https://github.com/junegunn/fzf) | Fuzzy finder |
 | [chafa](https://hpjansson.org/chafa/) | Terminal image previews in `fzf` |
+| [gh](https://cli.github.com/) | GitHub CLI — powers the `gh*` aliases and PR-picker functions |
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | Smarter `cd` with frecency |
 | [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) | Fish-style command suggestions |
 | [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) | Live syntax highlighting |
