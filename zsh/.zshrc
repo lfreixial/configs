@@ -108,7 +108,11 @@ fi
 
 # OS-specific configurations
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    if [ -f ~/.zsh_debian ]; then
+    if command -v pacman >/dev/null 2>&1; then
+        if [ -f ~/.zsh_arch ]; then
+            source ~/.zsh_arch
+        fi
+    elif [ -f ~/.zsh_debian ]; then
         source ~/.zsh_debian
     fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then

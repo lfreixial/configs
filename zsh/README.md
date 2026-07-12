@@ -1,6 +1,6 @@
 # Zsh
 
-Zsh config built on Oh My Zsh and Zinit, with Starship prompt, fzf-tab completion, and OS-specific overrides for macOS and Debian/Ubuntu.
+Zsh config built on Oh My Zsh and Zinit, with Starship prompt, fzf-tab completion, and OS-specific overrides for macOS, Debian/Ubuntu, and Arch Linux.
 
 ## Frameworks & plugins
 
@@ -35,6 +35,7 @@ Zsh config built on Oh My Zsh and Zinit, with Starship prompt, fzf-tab completio
 | `.zsh_keybinds` | Key bindings |
 | `.zsh_mac` | macOS-specific config |
 | `.zsh_debian` | Debian/Ubuntu-specific config |
+| `.zsh_arch` | Arch Linux-specific config |
 | `~/.zsh_secrets` | Secrets (not tracked — create locally) |
 
 ## Aliases
@@ -54,7 +55,7 @@ Zsh config built on Oh My Zsh and Zinit, with Starship prompt, fzf-tab completio
 | `c` | `clear` |
 | `ls` | `eza` with icons, git status, and colours |
 | `f` | fzf file picker with `bat` text previews and `chafa` image previews → open in Neovim |
-| `cat` | `bat` / `batcat` (OS-dependent) |
+| `cat` | `bat` / `batcat` (OS-dependent — Debian/Ubuntu package `bat` as `batcat`; Arch and macOS ship the `bat` binary directly) |
 
 ### Git
 

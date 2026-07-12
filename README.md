@@ -1,6 +1,6 @@
 # configs
 
-Personal dotfiles for Zsh, Neovim, and tmux — targeting macOS and Debian/Ubuntu Linux.
+Personal dotfiles for Zsh, Neovim, and tmux — targeting macOS, Debian/Ubuntu Linux, and Arch Linux.
 
 ## What's included
 
@@ -12,7 +12,7 @@ Personal dotfiles for Zsh, Neovim, and tmux — targeting macOS and Debian/Ubunt
 
 ## Requirements
 
-- macOS or Debian/Ubuntu Linux
+- macOS, Debian/Ubuntu Linux, or Arch Linux (incl. Manjaro/EndeavourOS)
 - `zsh` as the default shell
 - `git`
 - `make`

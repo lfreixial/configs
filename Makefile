@@ -1,7 +1,8 @@
 .PHONY: all up zsh tmux nvim update-zsh update-tmux update-nvim install-deps \
-        _deps-linux _deps-mac _deps-common
+        _deps-debian _deps-arch _deps-mac _deps-common
 
 OS := $(shell uname -s)
+DISTRO := $(shell . /etc/os-release 2>/dev/null && echo "$$ID $$ID_LIKE")
 
 all: up
 
@@ -11,17 +12,19 @@ up: install-deps zsh tmux nvim
 
 install-deps:
 	@echo "==> Installing dependencies..."
-	@if [ "$(OS)" = "Linux" ]; then \
-		$(MAKE) --no-print-directory _deps-linux; \
-	elif [ "$(OS)" = "Darwin" ]; then \
+	@if [ "$(OS)" = "Darwin" ]; then \
 		$(MAKE) --no-print-directory _deps-mac; \
+	elif echo "$(DISTRO)" | grep -qw arch; then \
+		$(MAKE) --no-print-directory _deps-arch; \
+	elif [ "$(OS)" = "Linux" ]; then \
+		$(MAKE) --no-print-directory _deps-debian; \
 	else \
 		echo "  Unknown OS: $(OS), skipping system packages"; \
 	fi
 	@$(MAKE) --no-print-directory _deps-common
 
-_deps-linux:
-	@echo "  [Linux] Checking system packages..."
+_deps-debian:
+	@echo "  [Debian/Ubuntu] Checking system packages..."
 	@missing=""; \
 	for pkg in git curl ca-certificates tmux bat fd-find ripgrep zsh zsh-syntax-highlighting fontconfig unzip jq shellcheck shfmt chafa file gh xclip direnv; do \
 		dpkg -s "$$pkg" >/dev/null 2>&1 || missing="$$missing $$pkg"; \
@@ -70,6 +73,18 @@ _deps-linux:
 		rm -f /tmp/JetBrainsMono.tar.xz; \
 		echo "  JetBrainsMono Nerd Font installed"; \
 	}
+
+_deps-arch:
+	@echo "  [Arch] Checking system packages..."
+	@missing=""; \
+	for pkg in git curl ca-certificates tmux bat fd ripgrep zsh zsh-syntax-highlighting fontconfig unzip jq shellcheck shfmt chafa file github-cli xclip direnv eza neovim lazygit ttf-jetbrains-mono-nerd; do \
+		pacman -Qi "$$pkg" >/dev/null 2>&1 || missing="$$missing $$pkg"; \
+	done; \
+	if [ -n "$$missing" ]; then \
+		sudo pacman -Sy --noconfirm --needed $$missing; \
+	fi
+	@command -v zoxide >/dev/null 2>&1 || curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+	@command -v rbenv >/dev/null 2>&1 || curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
 
 _deps-mac:
 	@echo "  [macOS] Checking Homebrew..."
