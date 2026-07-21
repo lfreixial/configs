@@ -1,3 +1,8 @@
+# Restore Caelestia terminal colour scheme (foot doesn't persist OSC colours
+# across new shells the way it does within a single one; fish replays this
+# same file via its own config)
+cat ~/.local/state/caelestia/sequences.txt 2>/dev/null
+
 # Oh My Zsh configuration
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -108,7 +113,11 @@ fi
 
 # OS-specific configurations
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    if [ -f ~/.zsh_debian ]; then
+    if command -v pacman >/dev/null 2>&1; then
+        if [ -f ~/.zsh_arch ]; then
+            source ~/.zsh_arch
+        fi
+    elif [ -f ~/.zsh_debian ]; then
         source ~/.zsh_debian
     fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
@@ -120,4 +129,5 @@ fi
 # Initialize other tools
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(rbenv init -)"
+command -v mise >/dev/null 2>&1 && eval "$(mise activate zsh)"
 eval "$(starship init zsh)"
